@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://www.ciuzaak.com/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://www.ciuzaak.com/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ciuzaak.com","root":"/blog/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近协议更新的太快啦，感觉有好多好玩的，比较火的应该是hysteria2吧，垃圾线路都能跑满。自建的话其实有很多自动化脚本了，所以这里主要介绍一些前期准备，还有我实装后的体验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无脑自建hysteria2节点">
+<meta property="og:url" content="https://ciuzaak.com/blog/2023/11/11/hysteria2-tutorial-for-rookies/index.html">
+<meta property="og:site_name" content="Ciuzaak&#39;s Blog">
+<meta property="og:description" content="最近协议更新的太快啦，感觉有好多好玩的，比较火的应该是hysteria2吧，垃圾线路都能跑满。自建的话其实有很多自动化脚本了，所以这里主要介绍一些前期准备，还有我实装后的体验。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://v2.hysteria.network/assets/banner_light.svg#logo-light">
+<meta property="og:image" content="https://telegra.ph/file/9db5c9f076292ceff7e55.png">
+<meta property="og:image" content="https://telegra.ph/file/3624f6235f8e272e934c6.png">
+<meta property="og:image" content="https://telegra.ph/file/52775ea5132ceb872bd79.png">
+<meta property="og:image" content="https://telegra.ph/file/d52dae7c4c309f2034d9f.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/86833913/280512382-5ed8e9de-3296-4dfc-ad65-2e181017829e.png">
+<meta property="og:image" content="https://telegra.ph/file/7d889d85a2b9d6e435721.png">
+<meta property="og:image" content="https://telegra.ph/file/f37376972f8ebfc4043cf.png">
+<meta property="og:image" content="https://telegra.ph/file/3f6861e3046559506f271.png">
+<meta property="og:image" content="https://telegra.ph/file/229769c466893fa0db625.png">
+<meta property="og:image" content="https://telegra.ph/file/71452a7b3a9938c5116f9.png">
+<meta property="article:published_time" content="2023-11-10T21:10:58.000Z">
+<meta property="article:modified_time" content="2023-11-17T15:26:54.348Z">
+<meta property="article:author" content="Ciuzaak Wong">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://v2.hysteria.network/assets/banner_light.svg#logo-light">
+
+<link rel="canonical" href="https://ciuzaak.com/blog/2023/11/11/hysteria2-tutorial-for-rookies/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>无脑自建hysteria2节点 | Ciuzaak's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ciuzaak's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ciuzaak.com/blog/2023/11/11/hysteria2-tutorial-for-rookies/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/41275670?v=4">
+      <meta itemprop="name" content="Ciuzaak Wong">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ciuzaak's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          无脑自建hysteria2节点
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-11-11 05:10:58" itemprop="dateCreated datePublished" datetime="2023-11-11T05:10:58+08:00">2023-11-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-11-17 23:26:54" itemprop="dateModified" datetime="2023-11-17T23:26:54+08:00">2023-11-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <img src="https://v2.hysteria.network/assets/banner_light.svg#logo-light" width="50%">
+
+<p>最近协议更新的太快啦，感觉有好多好玩的，比较火的应该是hysteria2吧，垃圾线路都能跑满。自建的话其实有很多自动化脚本了，所以这里主要介绍一些前期准备，还有我实装后的体验。</p>
+<span id="more"></span>
+
+<h2 id="1-买台小鸡"><a href="#1-买台小鸡" class="headerlink" title="1. 买台小鸡"></a>1. 买台小鸡</h2><p>没VPS玩不成啊，所以先买买买。如果有外币信用卡可以去薅一下GCP或AWS之类的，但是流量可能比较小。我自己用的是<a target="_blank" rel="noopener" href="https://my.racknerd.com/cart.php?a=confproduct&i=0">Racknerd圣何塞</a>，$10.98&#x2F;year，具体评测看<a target="_blank" rel="noopener" href="https://hostalk.net/posts/racknerd_sanjose.html">这里</a>，作为入门机不错。</p>
+<img src="https://telegra.ph/file/9db5c9f076292ceff7e55.png" width="60%">
+
+<p><strong>2023.11.17更新：免费搞了台AWS首尔玩玩，体验比这个更好，虽然每月只有100G</strong></p>
+<h2 id="2-买个域名"><a href="#2-买个域名" class="headerlink" title="2. 买个域名"></a>2. 买个域名</h2><p>很多渠道，我是在<a target="_blank" rel="noopener" href="https://www.namesilo.com/">NameSilo</a>买的，之前活动1刀买了个.com，好爽。现在一个.com应该要13刀了，但是其它后缀的不贵：</p>
+<img src="https://telegra.ph/file/3624f6235f8e272e934c6.png" width="80%">
+
+<p>玩hysteria2的话什么后缀应该无所谓，但如果你后面想玩玩其它协议，或者在VPS上搭网站申请免费SSL证书啥的，可能需要走Cloudflare，但它又不支持.top、.xyz这种便宜的后缀，所以自己考虑清楚…</p>
+<p>域名要跟你的VPS做DNS绑定，可以在你的域名管理处添加一个A记录，指向你的VPS IP，如下图：</p>
+<img src="https://telegra.ph/file/52775ea5132ceb872bd79.png" width="80%">
+
+<p>这里记得不要套CDN，走DNS only就行，因为<strong>hysteria2是直连的，不支持CDN</strong>，看官方说明：</p>
+<img src="https://telegra.ph/file/d52dae7c4c309f2034d9f.png" width="80%">
+
+<h2 id="3-跑下脚本"><a href="#3-跑下脚本" class="headerlink" title="3. 跑下脚本"></a>3. 跑下脚本</h2><p>进入VPS，直接用的<a target="_blank" rel="noopener" href="https://github.com/mack-a/v2ray-agent">八合一脚本</a>，装hysteria2之前要先有vless，具体的教程看<a target="_blank" rel="noopener" href="https://www.v2ray-agent.com/archives/1697162969693">这里</a>，<strong>中间需要输入的域名就是你刚才完成绑定那个</strong>。我因为没打算用Reality所以组合安装的时候只装了VLESS_TLS_vision。</p>
+<p>新版本脚本装hysteria2的时候可以设置本地的上下行速度，自己调整一下，<del>我直接拉满1000mbps，但我自己设备顶多跑100🤪</del></p>
+<p><strong>2023.11.17更新：根据自己本地实际带宽调整，这里才可以兼顾速度、稳定性和流量损耗</strong></p>
+<h2 id="4-订阅节点"><a href="#4-订阅节点" class="headerlink" title="4. 订阅节点"></a>4. 订阅节点</h2><p>装完会自动弹出节点订阅，但是分开的，vless和hysteria2各一个。建议重新输入<code>vasma</code>打开脚本，依次<code>7.账号管理 -&gt; 2.查看订阅</code>，订阅分两种，默认和Clash Meta，如何导入客户端参考<a target="_blank" rel="noopener" href="https://www.v2ray-agent.com/archives/1695534611317">这里</a>。</p>
+<p>不过因为我最近是忠实的sing-box粉，我的订阅方法是：复制<strong>默认订阅中的url</strong>，然后访问  <a target="_blank" rel="noopener" href="https://订阅转换网址/config/%E8%AE%A2%E9%98%85url">https://订阅转换网址/config/订阅url</a> 来获取配置，具体参考<a href="/blog/2023/11/08/sing-box_tutorial_for_clash_users">Clash机场用户无痛转sing-box</a>。</p>
+<p>为了方便和原本的机场节点共用，可以对<code>自建订阅URL|机场订阅URL</code>进行<a target="_blank" rel="noopener" href="https://www.urlencoder.org/">URL编码</a>，再访问 <a target="_blank" rel="noopener" href="https://订阅转换网址/config/%E7%BC%96%E7%A0%81url">https://订阅转换网址/config/编码url</a> 来获取配置。</p>
+<img src="https://user-images.githubusercontent.com/86833913/280512382-5ed8e9de-3296-4dfc-ad65-2e181017829e.png" width="60%">
+
+<p>另外，用<a target="_blank" rel="noopener" href="https://github.com/Toperlock/sing-box-subscribe">sing-box-subscribe</a>做订阅转换的时候，对hysteria2节点还是会有速度限制，需要你手动改一下代码重新部署。</p>
+<img src="https://telegra.ph/file/7d889d85a2b9d6e435721.png" width="80%">
+
+<p>成功导入配置后，可以看到vless和hysteria2节点都添加进来啦~</p>
+<img src="https://telegra.ph/file/f37376972f8ebfc4043cf.png" width="80%">
+
+<h2 id="5-实际体验"><a href="#5-实际体验" class="headerlink" title="5. 实际体验"></a>5. 实际体验</h2><p>先看一下我本地的网什么水平：</p>
+<img src="https://telegra.ph/file/3f6861e3046559506f271.png" width="80%">
+
+<p>再看下hysteria2的水平，下行算是基本跑满了，上行其实用起来没显示的那么垃，但也不快就是了，跟我其它机场节点差不多，不知道是不是sing-box客户端的问题？</p>
+<img src="https://telegra.ph/file/229769c466893fa0db625.png" width=80%>
+
+<p>最后YouTube跑个4k试试，跟我机场节点差不多，也是流畅看，但毕竟美国线路，延迟高，不能像我用港台节点一样随便拖动。</p>
+<img src="https://telegra.ph/file/71452a7b3a9938c5116f9.png" width=80%>
+
+<p>总体来说，对于一台$10.98的小鸡，有这样的表现已经不错了，拿来当备用节点非常适合。只能说hysteria2确实屌👍👍👍</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2023/11/09/sing-box_tutorial_for_ios_users/" rel="prev" title="在iOS上使用sing-box">
+      <i class="fa fa-chevron-left"></i> 在iOS上使用sing-box
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2023/11/15/ios-app-recommendations/" rel="next" title="小众iOS App推荐">
+      小众iOS App推荐 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B9%B0%E5%8F%B0%E5%B0%8F%E9%B8%A1"><span class="nav-number">1.</span> <span class="nav-text">1. 买台小鸡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%B9%B0%E4%B8%AA%E5%9F%9F%E5%90%8D"><span class="nav-number">2.</span> <span class="nav-text">2. 买个域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%B7%91%E4%B8%8B%E8%84%9A%E6%9C%AC"><span class="nav-number">3.</span> <span class="nav-text">3. 跑下脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AE%A2%E9%98%85%E8%8A%82%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">4. 订阅节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%AE%9E%E9%99%85%E4%BD%93%E9%AA%8C"><span class="nav-number">5.</span> <span class="nav-text">5. 实际体验</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ciuzaak Wong"
+      src="https://avatars.githubusercontent.com/u/41275670?v=4">
+  <p class="site-author-name" itemprop="name">Ciuzaak Wong</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ciuzaak" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ciuzaak" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://instagram.com/ciuzaak" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;ciuzaak" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://youtube.com/@ciuzaakwong" title="YouTube → https:&#x2F;&#x2F;youtube.com&#x2F;@ciuzaakwong" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i>YouTube</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://ciuzaak.com/" title="https:&#x2F;&#x2F;ciuzaak.com">ciuzaak.com</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ciuzaak Wong</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/muse.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
